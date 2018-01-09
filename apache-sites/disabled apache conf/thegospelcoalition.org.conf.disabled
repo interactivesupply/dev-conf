@@ -2,12 +2,12 @@
    ServerAdmin admin@thegospelcoalition.org
    ServerName thegospelcoalition.org
    ServerAlias thegospelcoalition.org
-   DocumentRoot \\\\ISCNAS\fs1\bcl\tgc
+   DocumentRoot C:\src\www.thegospelcoalition.org
    ErrorLog logs/thegospelcoalition.org_error.log
    CustomLog logs/thegospelcoalition.org_access.log combined
     	        SetEnvIf X-Forwarded-Proto https HTTPS=on
 
-    <Directory \\\\ISCNAS\fs1\bcl\tgc>
+    <Directory C:\src\www.thegospelcoalition.org>
         Options Indexes FollowSymLinks
 
 		Order allow,deny

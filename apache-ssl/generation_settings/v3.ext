@@ -1,0 +1,23 @@
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = localhost
+DNS.2 = thegospelcoalition.org
+DNS.3 = *.thegospelcoalition.org
+DNS.4 = *.insureyonder.com
+DNS.5 = *.imb.org
+DNS.6 = *.coalizaopeloevangelho.org
+DNS.7 = *.extengrace.org
+DNS.8 = *.wpengine.com
+DNS.9 = *.gospelinlife.com
+DNS.10 = *.bravestories.com
+DNS.11 = *.familyinnovations.com
+DNS.12 = *.mafuma.com
+DNS.13 = *.tgcitalia.org
+DNS.14 = *.blooma.com
+DNS.15 = *.bbdmn.com
+DNS.16 = *.coalicionporelevangelio.org
+DNS.17 = *.bcsmn.edu

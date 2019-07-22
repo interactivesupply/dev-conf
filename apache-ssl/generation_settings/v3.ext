@@ -33,3 +33,6 @@ DNS.25 = intlmission.staging.wpengine.com
 DNS.26 = *.livedead.org
 DNS.27 = interactivesupply.com
 DNS.28 = *.interactivesupply.com
+DNS.29 = *.ilhpp.org
+DNS.30 = ilhpp.org
+DNS.31 = google.api.client

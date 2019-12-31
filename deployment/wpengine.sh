@@ -58,7 +58,7 @@ then
 	echo "found local db";
 else
 	mysql -u root -pc0Smo85Log1ca! -Bse "
-	create database wp_$SITENAME;
+	create database wp_$SITENAME; 
 	CREATE USER '$SITENAME'@'%' IDENTIFIED BY '$DB_PASS';
 	GRANT ALL PRIVILEGES ON wp_$SITENAME.* TO '$SITENAME'@'%';
 	flush privileges;"
@@ -124,6 +124,7 @@ local_ip=`ipconfig getifaddr en0` or en1, maybe
 echo "address=/$SITENAME.wpengine.com/$local_ip" >> /usr/local/etc/dnsmasq.conf
 
 
+
 # open newly added website in Chrome
 open -na "Google Chrome" --args --new-window "https://$SITENAME.wpengine.com"
 
@@ -164,7 +165,9 @@ open -na "Google Chrome" --args --new-window "https://$SITENAME.wpengine.com"
  fi
 
 
+
  # todo: add these reset scripts to the git ignore
+ #create debug start and stop script inside of website... and add to gitignore
  # initialize brand new git repo from WPE
  # will the .gitignore needed to be committed (and can it be without conflicts with other repos)
  # how to handle websites with multiple domains

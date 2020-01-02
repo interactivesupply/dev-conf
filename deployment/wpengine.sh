@@ -120,8 +120,14 @@ brew services restart nginx
 
 
 # add DNS entry for $SITENAME.wpengine.com
-local_ip=`ipconfig getifaddr en0` or en1, maybe
-echo "address=/$SITENAME.wpengine.com/$local_ip" >> /usr/local/etc/dnsmasq.conf
+local_ip=`ipconfig getifaddr en0` #or en1, maybe
+echo "address=/.$SITENAME.wpengine.com/$local_ip" >> /usr/local/etc/dnsmasq.d/development.conf
+sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+brew services restart dnsmasq
+
+
+
+
 
 
 

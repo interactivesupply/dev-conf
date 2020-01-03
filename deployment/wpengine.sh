@@ -74,42 +74,42 @@ fi
  sed -i'' -e "s/$SITENAME.sftp.wpengine.com/localhost/g" $wp_config
  rm $wp_config-e
 
-#download database backup from wp engine website. 
-scp $SITENAME:/sites/$SITENAME/wp-content/mysql.sql $HOME/src/tmp/$SITENAME.sql
+# #download database backup from wp engine website. 
+# scp $SITENAME:/sites/$SITENAME/wp-content/mysql.sql $HOME/src/tmp/$SITENAME.sql
 
-#Create empty DB locally, if it doesn't exist
-found_local_db=`mysql -u root -pc0Smo85Log1ca! -Bse "SHOW DATABASES LIKE 'wp_$SITENAME';"`
-if [ "$found_local_db" == "wp_$SITENAME" ]
-then
-	echo "found local db";
-else
-	mysql -u root -pc0Smo85Log1ca! -Bse "
-	create database wp_$SITENAME; 
-	CREATE USER '$SITENAME'@'%' IDENTIFIED BY '$DB_PASS';
-	GRANT ALL PRIVILEGES ON wp_$SITENAME.* TO '$SITENAME'@'%';
-	flush privileges;"
+# #Create empty DB locally, if it doesn't exist
+# found_local_db=`mysql -u root -pc0Smo85Log1ca! -Bse "SHOW DATABASES LIKE 'wp_$SITENAME';"`
+# if [ "$found_local_db" == "wp_$SITENAME" ]
+# then
+# 	echo "found local db";
+# else
+# 	mysql -u root -pc0Smo85Log1ca! -Bse "
+# 	create database wp_$SITENAME; 
+# 	CREATE USER '$SITENAME'@'%' IDENTIFIED BY '$DB_PASS';
+# 	GRANT ALL PRIVILEGES ON wp_$SITENAME.* TO '$SITENAME'@'%';
+# 	flush privileges;"
 
-	# Restore Local DB
-	mysql -u root -pc0Smo85Log1ca! wp_$SITENAME < $HOME/src/tmp/$SITENAME.sql
-fi
+# 	# Restore Local DB
+# 	mysql -u root -pc0Smo85Log1ca! wp_$SITENAME < $HOME/src/tmp/$SITENAME.sql
+# fi
 
 
-# restore central dev db if it doesn't exist
-found_central_db=`mysql -h 192.168.0.14 -u root -pc0Smo85Log1ca! -Bse "SHOW DATABASES LIKE 'wp_$SITENAME';"`
-if [ "$found_central_db" == "wp_$SITENAME" ]
-then
-	echo "found central db";
-else
-	# Create empty DB centrall
-	mysql -h 192.168.0.14 -u root -pc0Smo85Log1ca! -Bse "
-	create database wp_$SITENAME;
-	CREATE USER '$SITENAME'@'%' IDENTIFIED BY '$DB_PASS';
-	GRANT ALL PRIVILEGES ON wp_$SITENAME.* TO '$SITENAME'@'%';
-	flush privileges;"
+# # restore central dev db if it doesn't exist
+# found_central_db=`mysql -h 192.168.0.14 -u root -pc0Smo85Log1ca! -Bse "SHOW DATABASES LIKE 'wp_$SITENAME';"`
+# if [ "$found_central_db" == "wp_$SITENAME" ]
+# then
+# 	echo "found central db";
+# else
+# 	# Create empty DB centrall
+# 	mysql -h 192.168.0.14 -u root -pc0Smo85Log1ca! -Bse "
+# 	create database wp_$SITENAME;
+# 	CREATE USER '$SITENAME'@'%' IDENTIFIED BY '$DB_PASS';
+# 	GRANT ALL PRIVILEGES ON wp_$SITENAME.* TO '$SITENAME'@'%';
+# 	flush privileges;"
 
-	# Restore central dev DB
-	mysql -h 192.168.0.14 -u root -pc0Smo85Log1ca! wp_$SITENAME < $HOME/src/tmp/$SITENAME.sql
-fi
+# 	# Restore central dev DB
+# 	mysql -h 192.168.0.14 -u root -pc0Smo85Log1ca! wp_$SITENAME < $HOME/src/tmp/$SITENAME.sql
+# fi
 
 
 

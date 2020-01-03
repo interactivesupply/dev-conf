@@ -27,5 +27,5 @@ do
 	fi
 done
 
-sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
-brew services restart dnsmasq
+# sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
+sudo brew services restart dnsmasq

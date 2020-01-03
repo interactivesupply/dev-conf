@@ -1,6 +1,19 @@
-!/bin/bash
+ !/bin/bash
+
+split_on_commas() {
+  local IFS=,
+  local WORD_LIST=($1)
+  for word in "${WORD_LIST[@]}"; do
+    echo "$word"
+  done
+}
 
 SITENAME="$1"
+CUSTOMDOMAINS="$2"
+
+# update to make sure we have the most recent conf files
+cd ~/src/dev-conf
+git pull
 
 if [ -z "$SITENAME" ]
 then
@@ -8,21 +21,21 @@ then
 	 echo $SITENAME
 fi
 
-# add SSH shortcut
- echo "HOST $SITENAME
- 	HostName $SITENAME.ssh.wpengine.net
- 	User $SITENAME
- 	IdentityFile /Users/interactivesupply/.ssh/id_rsa" >> ~/.ssh/config
+if [ -z "$CUSTOMDOMAINS" ]
+then
+	 read  -p "*Optional* Enter comma separated list of custom domains: " CUSTOMDOMAINS
+	 echo $CUSTOMDOMAINS
+fi
 
 # checkout website files
  git clone git@git.wpengine.com:production/$SITENAME.git $HOME/src/$SITENAME.wpengine
- cd ~/src/$SITENAME.wpengine
+ cd $HOME/src/$SITENAME.wpengine
  git fetch
  git checkout master
 
  if test -d $HOME/src/$SITENAME.wpengine/wp-content/; 
  then 
- 	 echo "directory exists"; 
+ 	git pull
  else
  # If no one has initialized this repo we have to download all the files, create the branch and set the upstream and add the gitignore
  	echo "not exist"
@@ -36,7 +49,20 @@ fi
  	git push -u origin master
  fi 
 
+#if wp-content doens't exist then the git pull failed
+ if test -d $HOME/src/$SITENAME.wpengine/wp-content/; 
+ then 
+ 	echo "git pull worked"
+ else
+ 	echo "git pull didn't work"
+ 	exit 1
+ fi 
 
+ # add SSH shortcut
+ echo "HOST $SITENAME
+ 	HostName $SITENAME.ssh.wpengine.net
+ 	User $SITENAME
+ 	IdentityFile /Users/interactivesupply/.ssh/id_rsa" >> ~/.ssh/config
 
 #download ignored files, change DB connection string to remote connection so we can grab the password.  then set the connectionstring to localhost
  scp $SITENAME:/sites/$SITENAME/.htaccess $HOME/src/$SITENAME.wpengine/.htaccess
@@ -88,31 +114,43 @@ fi
 
 
 # Add SSH info to Filezilla for sFTP
-sed -i'' -e "s/<\/Servers>/<Server> <Host>${SITENAME}.ssh.wpengine.net<\/Host> <Port>22<\/Port> <Protocol>1<\/Protocol> <Type>0<\/Type> <User>${SITENAME}<\/User> <Keyfile>\/Users\/interactivesupply\/.ssh\/id_rsa<\/Keyfile> <Logontype>5<\/Logontype> <TimezoneOffset>0<\/TimezoneOffset> <PasvMode>MODE_DEFAULT<\/PasvMode> <MaximumMultipleConnections>0<\/MaximumMultipleConnections> <EncodingType>Auto<\/EncodingType> <BypassProxy>0<\/BypassProxy> <Name>${SITENAME}.wpengine.com ssh<\/Name> <Comments \/> <Colour>0<\/Colour> <LocalDir>\/Users\/interactivesupply\/src\/${SITENAME}.wpengine<\/LocalDir> <RemoteDir>1 0 5 sites 8 ${SITENAME}<\/RemoteDir> <SyncBrowsing>1<\/SyncBrowsing> <DirectoryComparison>1<\/DirectoryComparison> <\/Server> <\/Servers>/g" ~/.config/filezilla/sitemanager.xml
+sed -i'' -e "s/<\/Servers>/<Server> <Host>${SITENAME}.ssh.wpengine.net<\/Host> <Port>22<\/Port> <Protocol>1<\/Protocol> <Type>0<\/Type> <User>${SITENAME}<\/User> <Keyfile>\/Users\/interactivesupply\/.ssh\/id_rsa<\/Keyfile> <Logontype>5<\/Logontype> <TimezoneOffset>0<\/TimezoneOffset> <PasvMode>MODE_DEFAULT<\/PasvMode> <MaximumMultipleConnections>0<\/MaximumMultipleConnections> <EncodingType>Auto<\/EncodingType> <BypassProxy>0<\/BypassProxy> <Name>${SITENAME}.wpengine.com ssh<\/Name> <Comments \/> <Colour>0<\/Colour> <LocalDir>\/Users\/interactivesupply\/src\/${SITENAME}.wpengine<\/LocalDir> <RemoteDir>1 0 5 sites 8 ${SITENAME}<\/RemoteDir> <SyncBrowsing>1<\/SyncBrowsing> <DirectoryComparison>1<\/DirectoryComparison> <\/Server> <\/Servers>/g" $HOME/.config/filezilla/sitemanager.xml
 
-
-# update to make sure we have all nginx block
-cd ~/src/dev-conf
-git pull
 
 # create nginx block
  new_nginx_block="$HOME/src/dev-conf/sites-enabled/$SITENAME.wpengine.conf"
  if [ ! -f "$new_nginx_block" ]
  then
  	cd $HOME/src/dev-conf
+
  	cp $HOME/src/dev-conf/sites-enabled/example.wpengine.conf $new_nginx_block
  	sed -i'' -e "s/example/$SITENAME/g" $new_nginx_block
  	rm $new_nginx_block-e
- 	git add -a
- 	git commit -m "Adding Website: $SITENAME"
+
+ 	split_on_commas $CUSTOMDOMAINS | while read domain; do
+	   	new_nginx_block="$HOME/src/dev-conf/sites-enabled/$domain.conf"
+	 	if [ ! -f "$new_nginx_block" ]
+		then
+			cp $HOME/src/dev-conf/sites-enabled/example.wpengine.conf $new_nginx_block
+			sed -i'' -e "s/example.wpengine.com/$domain/g" $new_nginx_block
+		 	sed -i'' -e "s/example/$SITENAME/g" $new_nginx_block
+			rm $new_nginx_block-e
+	   	fi
+	done
+
+ 	git add -A
+ 	git commit -m "Adding webserver conf for $SITENAME"
  	git push
  fi
 
 # restart nginx
-brew services restart nginx
+sudo brew services restart nginx
 
 # add domain to SSL settings and regenerate, git add commit and push
-# ...
+cd $HOME/src/dev-conf/deployment
+./add_ssl_domain.sh "$SITENAME.wpengine.com,$CUSTOMDOMAINS"
+
+
 
 # add sql workbench connection
 # ...
@@ -120,15 +158,8 @@ brew services restart nginx
 
 
 # add DNS entry for $SITENAME.wpengine.com
-local_ip=`ipconfig getifaddr en0` #or en1, maybe
-echo "address=/.$SITENAME.wpengine.com/$local_ip" >> /usr/local/etc/dnsmasq.d/development.conf
-sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
-brew services restart dnsmasq
-
-
-
-
-
+cd $HOME/src/dev-conf/deployment
+./point_domain_locally.sh "$SITENAME.wpengine.com,$CUSTOMDOMAINS"
 
 
 # open newly added website in Chrome
@@ -169,8 +200,6 @@ open -na "Google Chrome" --args --new-window "https://$SITENAME.wpengine.com"
  	sed -i'' -e "s/example/$SITENAME/g" $sublime_workspace
  	rm $sublime_workspace-e
  fi
-
-
 
  # todo: add these reset scripts to the git ignore
  #create debug start and stop script inside of website... and add to gitignore

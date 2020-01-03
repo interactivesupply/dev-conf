@@ -74,43 +74,42 @@ fi
  sed -i'' -e "s/$SITENAME.sftp.wpengine.com/localhost/g" $wp_config
  rm $wp_config-e
 
-# #download database backup from wp engine website. 
-# scp $SITENAME:/sites/$SITENAME/wp-content/mysql.sql $HOME/src/tmp/$SITENAME.sql
+#download database backup from wp engine website. 
+scp $SITENAME:/sites/$SITENAME/wp-content/mysql.sql $HOME/src/tmp/$SITENAME.sql
 
-# #Create empty DB locally, if it doesn't exist
-# found_local_db=`mysql -u root -pc0Smo85Log1ca! -Bse "SHOW DATABASES LIKE 'wp_$SITENAME';"`
-# if [ "$found_local_db" == "wp_$SITENAME" ]
-# then
-# 	echo "found local db";
-# else
-# 	mysql -u root -pc0Smo85Log1ca! -Bse "
-# 	create database wp_$SITENAME; 
-# 	CREATE USER '$SITENAME'@'%' IDENTIFIED BY '$DB_PASS';
-# 	GRANT ALL PRIVILEGES ON wp_$SITENAME.* TO '$SITENAME'@'%';
-# 	flush privileges;"
+#Create empty DB locally, if it doesn't exist
+found_local_db=`mysql -u root -pc0Smo85Log1ca! -Bse "SHOW DATABASES LIKE 'wp_$SITENAME';"`
+if [ "$found_local_db" == "wp_$SITENAME" ]
+then
+	echo "found local db";
+else
+	mysql -u root -pc0Smo85Log1ca! -Bse "
+	create database wp_$SITENAME; 
+	CREATE USER '$SITENAME'@'%' IDENTIFIED BY '$DB_PASS';
+	GRANT ALL PRIVILEGES ON wp_$SITENAME.* TO '$SITENAME'@'%';
+	flush privileges;"
 
-# 	# Restore Local DB
-# 	mysql -u root -pc0Smo85Log1ca! wp_$SITENAME < $HOME/src/tmp/$SITENAME.sql
-# fi
+	# Restore Local DB
+	mysql -u root -pc0Smo85Log1ca! wp_$SITENAME < $HOME/src/tmp/$SITENAME.sql
+fi
 
 
-# # restore central dev db if it doesn't exist
-# found_central_db=`mysql -h 192.168.0.14 -u root -pc0Smo85Log1ca! -Bse "SHOW DATABASES LIKE 'wp_$SITENAME';"`
-# if [ "$found_central_db" == "wp_$SITENAME" ]
-# then
-# 	echo "found central db";
-# else
-# 	# Create empty DB centrall
-# 	mysql -h 192.168.0.14 -u root -pc0Smo85Log1ca! -Bse "
-# 	create database wp_$SITENAME;
-# 	CREATE USER '$SITENAME'@'%' IDENTIFIED BY '$DB_PASS';
-# 	GRANT ALL PRIVILEGES ON wp_$SITENAME.* TO '$SITENAME'@'%';
-# 	flush privileges;"
+# restore central dev db if it doesn't exist
+found_central_db=`mysql -h 192.168.0.14 -u root -pc0Smo85Log1ca! -Bse "SHOW DATABASES LIKE 'wp_$SITENAME';"`
+if [ "$found_central_db" == "wp_$SITENAME" ]
+then
+	echo "found central db";
+else
+	# Create empty DB centrall
+	mysql -h 192.168.0.14 -u root -pc0Smo85Log1ca! -Bse "
+	create database wp_$SITENAME;
+	CREATE USER '$SITENAME'@'%' IDENTIFIED BY '$DB_PASS';
+	GRANT ALL PRIVILEGES ON wp_$SITENAME.* TO '$SITENAME'@'%';
+	flush privileges;"
 
-# 	# Restore central dev DB
-# 	mysql -h 192.168.0.14 -u root -pc0Smo85Log1ca! wp_$SITENAME < $HOME/src/tmp/$SITENAME.sql
-# fi
-
+	# Restore central dev DB
+	mysql -h 192.168.0.14 -u root -pc0Smo85Log1ca! wp_$SITENAME < $HOME/src/tmp/$SITENAME.sql
+fi
 
 
 # Add SSH info to Filezilla for sFTP
@@ -143,14 +142,9 @@ sed -i'' -e "s/<\/Servers>/<Server> <Host>${SITENAME}.ssh.wpengine.net<\/Host> <
  	git push
  fi
 
-# restart nginx
-sudo brew services restart nginx
-
 # add domain to SSL settings and regenerate, git add commit and push
 cd $HOME/src/dev-conf/deployment
 ./add_ssl_domain.sh "$SITENAME.wpengine.com,$CUSTOMDOMAINS"
-
-
 
 # add sql workbench connection
 # ...
@@ -160,10 +154,6 @@ cd $HOME/src/dev-conf/deployment
 # add DNS entry for $SITENAME.wpengine.com
 cd $HOME/src/dev-conf/deployment
 ./point_domain_locally.sh "$SITENAME.wpengine.com,$CUSTOMDOMAINS"
-
-
-# open newly added website in Chrome
-open -na "Google Chrome" --args --new-window "https://$SITENAME.wpengine.com"
 
  # create database reset scripts
  reset_local_db="$HOME/src/$SITENAME.wpengine/reset_local_db.sh"
@@ -200,6 +190,12 @@ open -na "Google Chrome" --args --new-window "https://$SITENAME.wpengine.com"
  	sed -i'' -e "s/example/$SITENAME/g" $sublime_workspace
  	rm $sublime_workspace-e
  fi
+
+ # restart nginx
+sudo brew services restart nginx
+
+# open newly added website in Chrome
+open -na "Google Chrome" --args --new-window "https://$SITENAME.wpengine.com"
 
  # todo: add these reset scripts to the git ignore
  #create debug start and stop script inside of website... and add to gitignore

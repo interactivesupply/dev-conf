@@ -13,7 +13,6 @@ fi
 if [ -z "$VERSION" ]
 then
 	# read  -p "PHP Version: " VERSION
-	# echo $VERSION
 	ini_info=`php -i | grep "Loaded Configuration File"`
 	match="Loaded Configuration File => "
 	replace=""
@@ -21,6 +20,9 @@ then
 else
 	php_ini="/usr/local/etc/php/$VERSION/php.ini"
 fi
+
+	 echo $VERSION
+
 
 #do this regardless
 sed -i'' -e "s/zend_extension=\"xdebug.so\"//g" $php_ini
@@ -36,7 +38,12 @@ fi
 
 if [ -z "$VERSION" ]
 then
-	brew services restart php
+	 brew services restart php
 else
-	brew services restart php@$VERSION
+	 brew services restart php@$VERSION
 fi
+
+	# sudo brew services restart nginx
+
+
+echo "Debugging has been changed"

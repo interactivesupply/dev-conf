@@ -14,7 +14,7 @@ IFS='
 '
 for x in `networksetup -listallnetworkservices $1`; 
 do 
-
+echo $x
 	if [ $x == "Wi-Fi" ] ||  [ $x == "Broadcom NetXtreme Gigabit Ethernet Controller" ]
 	then
 		if [ $STATE == "remote" ]
@@ -27,5 +27,6 @@ do
 	fi
 done
 
+echo "DNS has been changed"
 # sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
-sudo brew services restart dnsmasq
+#sudo brew services restart dnsmasq

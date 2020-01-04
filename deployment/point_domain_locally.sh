@@ -27,5 +27,7 @@ split_on_commas $CUSTOMDOMAINS | while read domain; do
 done
 
 #don't think this is necessary right now
-#sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder
-sudo brew services restart dnsmasq
+ sudo brew services restart dnsmasq
+ #sudo dscacheutil -flushcache
+ sudo killall -HUP mDNSResponder
+echo "domain(s) pointed locally"

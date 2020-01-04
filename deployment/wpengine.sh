@@ -192,7 +192,7 @@ cd $HOME/src/dev-conf/deployment
  fi
 
  # restart nginx
-sudo brew services restart nginx
+ sudo brew services restart nginx
 
 # open newly added website in Chrome
 open -na "Google Chrome" --args --new-window "https://$SITENAME.wpengine.com"

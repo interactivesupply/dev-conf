@@ -28,7 +28,7 @@ split_on_commas $DOMAINS | while read domain; do
 	if [ -z "$match" ] && [[ ! -z "$domain" ]]
 	then
 		LAST_SSL=$((LAST_SSL+1))
-		 echo "DNS.$LAST_SSL = $domain"  >> $SSL_DOMAIN_FILE
+		 echo $"DNS.$LAST_SSL = $domain"  >> $SSL_DOMAIN_FILE
 	fi
 done
 

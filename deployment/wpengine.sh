@@ -69,7 +69,7 @@ fi
  wp_config="$HOME/src/$SITENAME.wpengine/wp-config.php"
  scp $SITENAME:/sites/$SITENAME/wp-config.php $wp_config
  sed -i'' -e "s/127.0.0.1/$SITENAME.sftp.wpengine.com/g" $wp_config
- DB_PASS=`php -r "include '$wp_config';  echo DB_PASSWORD;"`
+ DB_PASS=`php -d log_errors=Off -r "include '$wp_config';  echo DB_PASSWORD;"`
  echo $DB_PASS;
  sed -i'' -e "s/$SITENAME.sftp.wpengine.com/localhost/g" $wp_config
  rm $wp_config-e
@@ -162,7 +162,7 @@ cd $HOME/src/dev-conf/deployment
  	touch $reset_local_db
  	chmod +x $reset_local_db
  	echo "cd $HOME/src/dev-conf/deployment" >> $reset_local_db
- 	echo "./reset_local_db.sh $SITENAME" >> $reset_local_db
+ 	echo "./reset_db.sh wp_$SITENAME 127.0.0.1 $SITENAME /sites/$SITENAME/wp-content/mysql.sql" >> $reset_local_db
  fi
 
  reset_central_db="$HOME/src/$SITENAME.wpengine/reset_central_db.sh"
@@ -171,7 +171,7 @@ cd $HOME/src/dev-conf/deployment
  	touch $reset_central_db
  	chmod +x $reset_central_db
  	echo "cd $HOME/src/dev-conf/deployment" >> $reset_central_db
- 	echo "./reset_central_db.sh $SITENAME" >> $reset_central_db
+ 	echo "./reset_db.sh wp_$SITENAME 192.168.0.14 $SITENAME /sites/$SITENAME/wp-content/mysql.sql" >> $reset_central_db
  fi
 
  # add sublime files

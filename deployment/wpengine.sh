@@ -45,7 +45,7 @@ fi
  	rm -r $HOME/src/$SITENAME.wpengine/$SITENAME
  	cp $HOME/src/dev-conf/deployment/default_files/.gitignore .gitignore
 	cp -r $HOME/src/dev-conf/deployment/default_files/.vscode .vscode
- 	cp $HOME/src/dev-conf/deployment/default_files/gulp.js .gulp.js
+ 	cp $HOME/src/dev-conf/deployment/default_files/gulpfile.js gulpfile.js
 
  	git add -A
  	git commit -m "initial commit"

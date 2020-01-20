@@ -1,7 +1,7 @@
 #!/bin/bash
 
 split_on_commas() {
-  local IFS=,
+  localifS=,
   local WORD_LIST=($1)
   for word in "${WORD_LIST[@]}"; do
     echo "$word"
@@ -11,7 +11,7 @@ split_on_commas() {
 SITENAME="$1"
 CUSTOMDOMAINS="$2"
 
-# update to make sure we have the most recent conf files
+# update to make sure we have the most recent conffiles
 cd ~/src/dev-conf
 git pull
 
@@ -27,7 +27,18 @@ then
 	 echo $CUSTOMDOMAINS
 fi
 
-# checkout website files
+
+ # add SSH shortcut
+ echo "HOST $SITENAME
+ 	HostName $SITENAME.ssh.wpengine.net
+ 	User $SITENAME
+ 	IdentityFile /Users/interactivesupply/.ssh/id_rsa" >> ~/.ssh/config
+
+	 # Add SSH info tofilezilla for sFTP
+sed -i'' -e "s/<\/Servers>/<Server> <Host>${SITENAME}.ssh.wpengine.net<\/Host> <Port>22<\/Port> <Protocol>1<\/Protocol> <Type>0<\/Type> <User>${SITENAME}<\/User> <Keyfile>\/Users\/interactivesupply\/.ssh\/id_rsa<\/Keyfile> <Logontype>5<\/Logontype> <TimezoneOffset>0<\/TimezoneOffset> <PasvMode>MODE_DEFAULT<\/PasvMode> <MaximumMultipleConnections>0<\/MaximumMultipleConnections> <EncodingType>Auto<\/EncodingType> <BypassProxy>0<\/BypassProxy> <Name>${SITENAME}.wpengine.com ssh<\/Name> <Comments \/> <Colour>0<\/Colour> <LocalDir>\/Users\/interactivesupply\/src\/${SITENAME}.wpengine<\/LocalDir> <RemoteDir>1 0 5 sites ${#SITENAME} ${SITENAME}<\/RemoteDir> <SyncBrowsing>1<\/SyncBrowsing> <DirectoryComparison>1<\/DirectoryComparison> <\/Server> <\/Servers>/g" $HOME/.config/filezilla/sitemanager.xml
+
+
+# checkout websitefiles
  git clone git@git.wpengine.com:production/$SITENAME.git $HOME/src/$SITENAME.wpengine
  cd $HOME/src/$SITENAME.wpengine
  git fetch
@@ -38,11 +49,11 @@ fi
  	cp $HOME/src/dev-conf/deployment/default_files/gulpfile.js gulpfile.js
  	 cp $HOME/src/dev-conf/deployment/default_files/package.json package.json
 
- if test -d $HOME/src/$SITENAME.wpengine/wp-content/; 
- then 
+if test -d $HOME/src/$SITENAME.wpengine/wp-content/; 
+then 
  	git pull
- else
- # If no one has initialized this repo we have to download all the files, create the branch and set the upstream and add the gitignore
+else
+ #if no one has initialized this repo we have to download all thefiles, create the branch and set the upstream and add the gitignore
  	echo "not exist"
  	git checkout -b master
  	scp -r -o StrictHostKeyChecking=no $SITENAME:/sites/$SITENAME $HOME/src/$SITENAME.wpengine
@@ -57,21 +68,21 @@ fi
  	git add -A
  	git commit -m "initial commit"
  	git push -u origin master
- fi 
+fi 
 
 
-#if wp-content doens't exist then the git pull failed
- if test -d $HOME/src/$SITENAME.wpengine/wp-content/; 
- then 
+#if wp-content doens't existthen the git pull failed
+if test -d $HOME/src/$SITENAME.wpengine/wp-content/; 
+then 
  	echo "git pull worked"
- else
+else
  	echo "git pull didn't work"
  	exit 1
- fi 
+fi 
 
  git remote add github git@github.com:interactivesupply/$SITENAME.git
 
-#add some new files to gitignore
+#add some newfiles to gitignore
 echo "/node_modules/" >> .gitignore
 echo "*.sh" >> .gitignore
 echo ".vscode/" >> .gitignore
@@ -79,13 +90,8 @@ echo ".vscode/" >> .gitignore
  #setup node modules and gulp install
  npm install
 
- # add SSH shortcut
- echo "HOST $SITENAME
- 	HostName $SITENAME.ssh.wpengine.net
- 	User $SITENAME
- 	IdentityFile /Users/interactivesupply/.ssh/id_rsa" >> ~/.ssh/config
 
-#download ignored files, change DB connection string to remote connection so we can grab the password.  then set the connectionstring to localhost
+#download ignoredfiles, change DB connection string to remote connection so we can grab the password. then set the connectionstring to localhost
  scp -r -o StrictHostKeyChecking=no $SITENAME:/sites/$SITENAME/.htaccess $HOME/src/$SITENAME.wpengine/.htaccess
  wp_config="$HOME/src/$SITENAME.wpengine/wp-config.php"
  scp -r -o StrictHostKeyChecking=no $SITENAME:/sites/$SITENAME/wp-config.php $wp_config
@@ -98,7 +104,7 @@ echo ".vscode/" >> .gitignore
 #download database backup from wp engine website. 
 scp -r -o StrictHostKeyChecking=no $SITENAME:/sites/$SITENAME/wp-content/mysql.sql $HOME/src/tmp/$SITENAME.sql
 
-#Create empty DB locally, if it doesn't exist
+#Create empty DB locally,if it doesn't exist
 found_local_db=`mysql -u root -pc0Smo85Log1ca! -Bse "SHOW DATABASES LIKE 'wp_$SITENAME';"`
 if [ "$found_local_db" == "wp_$SITENAME" ]
 then
@@ -115,7 +121,7 @@ else
 fi
 
 
-# restore central dev db if it doesn't exist
+# restore central dev dbif it doesn't exist
 found_central_db=`mysql -h 192.168.0.14 -u root -pc0Smo85Log1ca! -Bse "SHOW DATABASES LIKE 'wp_$SITENAME';"`
 if [ "$found_central_db" == "wp_$SITENAME" ]
 then
@@ -133,14 +139,12 @@ else
 fi
 
 
-# Add SSH info to Filezilla for sFTP
-sed -i'' -e "s/<\/Servers>/<Server> <Host>${SITENAME}.ssh.wpengine.net<\/Host> <Port>22<\/Port> <Protocol>1<\/Protocol> <Type>0<\/Type> <User>${SITENAME}<\/User> <Keyfile>\/Users\/interactivesupply\/.ssh\/id_rsa<\/Keyfile> <Logontype>5<\/Logontype> <TimezoneOffset>0<\/TimezoneOffset> <PasvMode>MODE_DEFAULT<\/PasvMode> <MaximumMultipleConnections>0<\/MaximumMultipleConnections> <EncodingType>Auto<\/EncodingType> <BypassProxy>0<\/BypassProxy> <Name>${SITENAME}.wpengine.com ssh<\/Name> <Comments \/> <Colour>0<\/Colour> <LocalDir>\/Users\/interactivesupply\/src\/${SITENAME}.wpengine<\/LocalDir> <RemoteDir>1 0 5 sites ${#SITENAME} ${SITENAME}<\/RemoteDir> <SyncBrowsing>1<\/SyncBrowsing> <DirectoryComparison>1<\/DirectoryComparison> <\/Server> <\/Servers>/g" $HOME/.config/filezilla/sitemanager.xml
 
 
 # create nginx block
  new_nginx_block="$HOME/src/dev-conf/sites-enabled/$SITENAME.wpengine.conf"
- if [ ! -f "$new_nginx_block" ]
- then
+if [ ! -f "$new_nginx_block" ]
+then
  	cd $HOME/src/dev-conf
 
  	cp $HOME/src/dev-conf/sites-enabled/example.wpengine.conf $new_nginx_block
@@ -161,7 +165,7 @@ sed -i'' -e "s/<\/Servers>/<Server> <Host>${SITENAME}.ssh.wpengine.net<\/Host> <
  	git add -A
  	git commit -m "Adding webserver conf for $SITENAME"
  	git push
- fi
+fi
 
 # add domain to SSL settings and regenerate, git add commit and push
 cd $HOME/src/dev-conf/deployment
@@ -178,31 +182,31 @@ cd $HOME/src/dev-conf/deployment
 
  # create database reset scripts
  reset_local_db="$HOME/src/$SITENAME.wpengine/reset_local_db.sh"
- if [ ! -f "$reset_local_db" ]
- then
+if [ ! -f "$reset_local_db" ]
+then
  	touch $reset_local_db
  	chmod +x $reset_local_db
  	echo "cd $HOME/src/dev-conf/deployment" >> $reset_local_db
  	echo "./reset_db.sh wp_$SITENAME 127.0.0.1 $SITENAME /sites/$SITENAME/wp-content/mysql.sql" >> $reset_local_db
- fi
+fi
 
  reset_central_db="$HOME/src/$SITENAME.wpengine/reset_central_db.sh"
- if [ ! -f "$reset_central_db" ]
- then
+if [ ! -f "$reset_central_db" ]
+then
  	touch $reset_central_db
  	chmod +x $reset_central_db
  	echo "cd $HOME/src/dev-conf/deployment" >> $reset_central_db
  	echo "./reset_db.sh wp_$SITENAME 192.168.0.14 $SITENAME /sites/$SITENAME/wp-content/mysql.sql" >> $reset_central_db
- fi
+fi
 
- # add VS code solution files
+ # add VS code solutionfiles
  vscode_project="$HOME/src/$SITENAME.wpengine/$SITENAME.code-workspace"
- if [ ! -f "$vscode_project" ]
- then
+if [ ! -f "$vscode_project" ]
+then
  	cp $HOME/src/dev-conf/deployment/default_files/example.code-workspace $vscode_project
  	sed -i'' -e "s/example/$SITENAME/g" $vscode_project
  	rm $vscode_project-e
- fi
+fi
 
  open $vscode_project
 

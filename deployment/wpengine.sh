@@ -44,6 +44,9 @@ fi
  	mv $HOME/src/$SITENAME.wpengine/$SITENAME/* $HOME/src/$SITENAME.wpengine/
  	rm -r $HOME/src/$SITENAME.wpengine/$SITENAME
  	cp $HOME/src/dev-conf/deployment/default_files/.gitignore .gitignore
+	cp -r $HOME/src/dev-conf/deployment/default_files/.vscode .vscode
+ 	cp $HOME/src/dev-conf/deployment/default_files/gulp.js .gulp.js
+
  	git add -A
  	git commit -m "initial commit"
  	git push -u origin master
@@ -58,6 +61,11 @@ fi
  	exit 1
  fi 
 
+ git remote add github git@github.com:interactivesupply/$SITENAME.git
+
+ #setup node modules and gulp install
+ npm install
+
  # add SSH shortcut
  echo "HOST $SITENAME
  	HostName $SITENAME.ssh.wpengine.net
@@ -65,9 +73,9 @@ fi
  	IdentityFile /Users/interactivesupply/.ssh/id_rsa" >> ~/.ssh/config
 
 #download ignored files, change DB connection string to remote connection so we can grab the password.  then set the connectionstring to localhost
- scp $SITENAME:/sites/$SITENAME/.htaccess $HOME/src/$SITENAME.wpengine/.htaccess
+ scp -r -o StrictHostKeyChecking=no $SITENAME:/sites/$SITENAME/.htaccess $HOME/src/$SITENAME.wpengine/.htaccess
  wp_config="$HOME/src/$SITENAME.wpengine/wp-config.php"
- scp $SITENAME:/sites/$SITENAME/wp-config.php $wp_config
+ scp -r -o StrictHostKeyChecking=no $SITENAME:/sites/$SITENAME/wp-config.php $wp_config
  sed -i'' -e "s/127.0.0.1/$SITENAME.sftp.wpengine.com/g" $wp_config
  DB_PASS=`php -d log_errors=Off -r "include '$wp_config';  echo DB_PASSWORD;"`
  echo $DB_PASS;
@@ -75,7 +83,7 @@ fi
  rm $wp_config-e
 
 #download database backup from wp engine website. 
-scp $SITENAME:/sites/$SITENAME/wp-content/mysql.sql $HOME/src/tmp/$SITENAME.sql
+scp -r -o StrictHostKeyChecking=no $SITENAME:/sites/$SITENAME/wp-content/mysql.sql $HOME/src/tmp/$SITENAME.sql
 
 #Create empty DB locally, if it doesn't exist
 found_local_db=`mysql -u root -pc0Smo85Log1ca! -Bse "SHOW DATABASES LIKE 'wp_$SITENAME';"`
@@ -113,7 +121,7 @@ fi
 
 
 # Add SSH info to Filezilla for sFTP
-sed -i'' -e "s/<\/Servers>/<Server> <Host>${SITENAME}.ssh.wpengine.net<\/Host> <Port>22<\/Port> <Protocol>1<\/Protocol> <Type>0<\/Type> <User>${SITENAME}<\/User> <Keyfile>\/Users\/interactivesupply\/.ssh\/id_rsa<\/Keyfile> <Logontype>5<\/Logontype> <TimezoneOffset>0<\/TimezoneOffset> <PasvMode>MODE_DEFAULT<\/PasvMode> <MaximumMultipleConnections>0<\/MaximumMultipleConnections> <EncodingType>Auto<\/EncodingType> <BypassProxy>0<\/BypassProxy> <Name>${SITENAME}.wpengine.com ssh<\/Name> <Comments \/> <Colour>0<\/Colour> <LocalDir>\/Users\/interactivesupply\/src\/${SITENAME}.wpengine<\/LocalDir> <RemoteDir>1 0 5 sites 8 ${SITENAME}<\/RemoteDir> <SyncBrowsing>1<\/SyncBrowsing> <DirectoryComparison>1<\/DirectoryComparison> <\/Server> <\/Servers>/g" $HOME/.config/filezilla/sitemanager.xml
+sed -i'' -e "s/<\/Servers>/<Server> <Host>${SITENAME}.ssh.wpengine.net<\/Host> <Port>22<\/Port> <Protocol>1<\/Protocol> <Type>0<\/Type> <User>${SITENAME}<\/User> <Keyfile>\/Users\/interactivesupply\/.ssh\/id_rsa<\/Keyfile> <Logontype>5<\/Logontype> <TimezoneOffset>0<\/TimezoneOffset> <PasvMode>MODE_DEFAULT<\/PasvMode> <MaximumMultipleConnections>0<\/MaximumMultipleConnections> <EncodingType>Auto<\/EncodingType> <BypassProxy>0<\/BypassProxy> <Name>${SITENAME}.wpengine.com ssh<\/Name> <Comments \/> <Colour>0<\/Colour> <LocalDir>\/Users\/interactivesupply\/src\/${SITENAME}.wpengine<\/LocalDir> <RemoteDir>1 0 5 sites ${#SITENAME} ${SITENAME}<\/RemoteDir> <SyncBrowsing>1<\/SyncBrowsing> <DirectoryComparison>1<\/DirectoryComparison> <\/Server> <\/Servers>/g" $HOME/.config/filezilla/sitemanager.xml
 
 
 # create nginx block
@@ -174,22 +182,16 @@ cd $HOME/src/dev-conf/deployment
  	echo "./reset_db.sh wp_$SITENAME 192.168.0.14 $SITENAME /sites/$SITENAME/wp-content/mysql.sql" >> $reset_central_db
  fi
 
- # add sublime files
- sublime_project="$HOME/src/$SITENAME.wpengine/$SITENAME.sublime-project"
- if [ ! -f "$sublime_project" ]
+ # add VS code solution files
+ vscode_project="$HOME/src/$SITENAME.wpengine/$SITENAME.code-workspace"
+ if [ ! -f "$vscode_project" ]
  then
- 	cp $HOME/src/dev-conf/deployment/default_files/example.sublime-project $sublime_project
- 	sed -i'' -e "s/example/$SITENAME/g" $sublime_project
- 	rm $sublime_project-e
+ 	cp $HOME/src/dev-conf/deployment/default_files/example.code-workspace $vscode_project
+ 	sed -i'' -e "s/example/$SITENAME/g" $vscode_project
+ 	rm $vscode_project-e
  fi
 
- sublime_workspace="$HOME/src/$SITENAME.wpengine/$SITENAME.sublime-workspace"
- if [ ! -f "$sublime_workspace" ]
- then
- 	cp $HOME/src/dev-conf/deployment/default_files/example.sublime-workspace $sublime_workspace
- 	sed -i'' -e "s/example/$SITENAME/g" $sublime_workspace
- 	rm $sublime_workspace-e
- fi
+ open $vscode_project
 
  # restart nginx
  sudo brew services restart nginx
@@ -201,8 +203,4 @@ open -na "Google Chrome" --args --new-window "https://$SITENAME.wpengine.com"
  #create debug start and stop script inside of website... and add to gitignore
  # initialize brand new git repo from WPE
  # will the .gitignore needed to be committed (and can it be without conflicts with other repos)
- # how to handle websites with multiple domains
- # how to handle wp_uploads redirects under nginx
  # any node_js or bower stuff to do?
- # how to run website error log in the "console" app
-

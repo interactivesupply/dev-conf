@@ -6,22 +6,19 @@ VERSION="$2"
  if [ -z "$STATE" ]
  then
 	read  -p "Enter 'start' or 'stop': " STATE
-	echo $STATE
 fi
 
 
 if [ -z "$VERSION" ]
 then
-	# read  -p "PHP Version: " VERSION
-	ini_info=`php -i | grep "Loaded Configuration File"`
-	match="Loaded Configuration File => "
-	replace=""
-	php_ini=${ini_info/$match/$replace}
-else
-	php_ini="/usr/local/etc/php/$VERSION/php.ini"
+	VERSION="7.4"
+	# ini_info=`php -i | grep "Loaded Configuration File"`
+	# match="Loaded Configuration File => "
+	# replace=""
+	# php_ini=${ini_info/$match/$replace}
 fi
 
-	 echo $VERSION
+php_ini="/Users/interactivesupply/src/dev-conf/php/php_$VERSION.ini"
 
 
 #do this regardless
@@ -35,7 +32,6 @@ else
 	echo "started"
 fi
 
-
 if [ -z "$VERSION" ]
 then
 	 brew services restart php
@@ -43,7 +39,4 @@ else
 	 brew services restart php@$VERSION
 fi
 
-	# sudo brew services restart nginx
-
-
-echo "Debugging has been changed"
+echo "PHP $VERSION: Debugging has been changed"

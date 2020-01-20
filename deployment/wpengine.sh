@@ -33,6 +33,11 @@ fi
  git fetch
  git checkout master
 
+ 	 #remove these when we're done setting up sites
+ cp -r $HOME/src/dev-conf/deployment/default_files/.vscode .vscode
+ 	cp $HOME/src/dev-conf/deployment/default_files/gulpfile.js gulpfile.js
+ 	 cp $HOME/src/dev-conf/deployment/default_files/package.json package.json
+
  if test -d $HOME/src/$SITENAME.wpengine/wp-content/; 
  then 
  	git pull
@@ -44,13 +49,16 @@ fi
  	mv $HOME/src/$SITENAME.wpengine/$SITENAME/* $HOME/src/$SITENAME.wpengine/
  	rm -r $HOME/src/$SITENAME.wpengine/$SITENAME
  	cp $HOME/src/dev-conf/deployment/default_files/.gitignore .gitignore
-	cp -r $HOME/src/dev-conf/deployment/default_files/.vscode .vscode
- 	cp $HOME/src/dev-conf/deployment/default_files/gulpfile.js gulpfile.js
+	 #uncomment these when we're done setting up sites
+	# cp -r $HOME/src/dev-conf/deployment/default_files/.vscode .vscode
+ 	# cp $HOME/src/dev-conf/deployment/default_files/gulpfile.js gulpfile.js
+ 	# cp $HOME/src/dev-conf/deployment/default_files/package.json package.json
 
  	git add -A
  	git commit -m "initial commit"
  	git push -u origin master
  fi 
+
 
 #if wp-content doens't exist then the git pull failed
  if test -d $HOME/src/$SITENAME.wpengine/wp-content/; 
@@ -62,6 +70,11 @@ fi
  fi 
 
  git remote add github git@github.com:interactivesupply/$SITENAME.git
+
+#add some new files to gitignore
+echo "/node_modules/" >> .gitignore
+echo "*.sh" >> .gitignore
+echo ".vscode/" >> .gitignore
 
  #setup node modules and gulp install
  npm install

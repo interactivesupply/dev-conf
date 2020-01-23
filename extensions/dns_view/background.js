@@ -27,29 +27,26 @@
 // });
 // }
 //   //chrome.tabs.insertCSS(integer tabId, object details, function callback)
-
 $( document ).ready(function() {
-
   $.ajax({
-    url: location.origin + "?asdf"
+    url: "http://test.localhost/ping.php?url=" + location.host,
+    crossDomain: true,
+    dataType: 'json',
+    contentType: "application/json;"
   })
     .done(function( data, textStatus, jqXHR ) {
-
-      console.log(jqXHR.getResponseHeader("RemoteAddress"));
-
-  // debugger;
-  console.log(data);
-      console.log(textStatus);
-      console.log(jqXHR);
-
-      // $("body").append("<div class='" + (data.ip.indexOf("192.168" > 0 ? "local" : "remote")) + "'>asdfasdf</div>");
-      // $("body").append("<style>" + 
-      // ".local{background:blue;} .remote{background:red;}" + 
-      // "</style>");
+      if(data.ip != undefined)
+      {
+      var pointedAt = data.ip.indexOf("192.168") > -1 ? "local" : "remote";
+        $("body").append("<div class='" + pointedAt + "'>" + pointedAt + "</div>");
+        $("body").append("<style>" + 
+        ".local{background:blue;position:absolute;top:0;right:0;color:#fff;z-index:1000000;} .remote{background:red;position:absolute;top:0;right:0;color:#fff;z-index:1000000;}" + 
+        "</style>");
+      }
+    }).fail(function(data) {
+      console.log(data);
+    })
+    .always(function(data) {
+      console.log(data);
     });
-
-
-
-
-    
 });

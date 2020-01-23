@@ -187,7 +187,7 @@ then
  	touch $reset_local_db
  	chmod +x $reset_local_db
  	echo "cd $HOME/src/dev-conf/deployment" >> $reset_local_db
- 	echo "./reset_db.sh wp_$SITENAME 127.0.0.1 $SITENAME /sites/$SITENAME/wp-content/mysql.sql" >> $reset_local_db
+ 	echo "./reset_db.sh wp_$SITENAME 127.0.0.1 $SITENAME@$SITENAME.ssh.wpengine.net /sites/$SITENAME/wp-content/mysql.sql" >> $reset_local_db
 fi
 
  reset_central_db="$HOME/src/$SITENAME.wpengine/reset_central_db.sh"

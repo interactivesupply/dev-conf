@@ -12,7 +12,7 @@ local_ip=`ipconfig getifaddr en0` #or en1, maybe
 
 IFS='
 '
-for x in `networksetup -listallnetworkservices $1`; 
+for x in `networksetup -listallnetworkservices`; 
 do 
 echo $x
 	if [ $x == "Wi-Fi" ] ||  [ $x == "Broadcom NetXtreme Gigabit Ethernet Controller" ]

@@ -15,7 +15,7 @@ IFS='
 for x in `networksetup -listallnetworkservices`; 
 do 
 echo $x
-	if [ $x == "Wi-Fi" ] ||  [ $x == "Broadcom NetXtreme Gigabit Ethernet Controller" ]
+	if [ $x == "Wi-Fi" ] ||  [ $x == "Broadcom NetXtreme Gigabit Ethernet Controller" ] ||  [ $x == "Ethernet" ]
 	then
 		if [ $STATE == "remote" ]
 		then

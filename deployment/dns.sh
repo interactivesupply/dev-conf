@@ -6,8 +6,16 @@ STATE="$1"
  then
 	read  -p "Enter 'local' or 'remote': " STATE
 fi
+local_ip=""
 
-local_ip=`ipconfig getifaddr en0` #or en1, maybe
+for i in {0..4}
+do
+ 	if [ -z "$local_ip" ]
+ 	then
+		local_ip=`ipconfig getifaddr en$i` #or en1, maybe
+	fi
+done
+
 
 
 IFS='

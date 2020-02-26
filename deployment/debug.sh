@@ -8,6 +8,11 @@ VERSION="$2"
 	read  -p "Enter 'start' or 'stop': " STATE
 fi
 
+ if [ -z "$VERSION" ]
+ then
+	read  -p "PHP Version (Optional): " VERSION
+fi
+
 
 if [ -z "$VERSION" ]
 then

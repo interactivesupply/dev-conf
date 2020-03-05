@@ -31,7 +31,7 @@ echo $x
 
 		if [ $STATE == "remote" ]
 		then
-			networksetup -setdnsservers $x empty #1.1.1.1 192.168.0.1
+			networksetup -setdnsservers $x 1.1.1.1 #empty #1.1.1.1 192.168.0.1
 		else
 			networksetup -setdnsservers $x $local_ip
 

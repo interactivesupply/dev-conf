@@ -128,7 +128,9 @@ display_startup_errors = Off
 
 ; Maximum allowed size for uploaded files.
 ; http://php.net/upload-max-filesize
-upload_max_filesize = 200M
+upload_max_filesize = 202M
+post_max_size = 201M
+
 
 ; Maximum number of files that can be uploaded via a single request
 max_file_uploads = 2000
@@ -155,7 +157,7 @@ sendmail_from = in@emailalert.me
 
 ; For Unix only.  You may supply arguments as well (default: "sendmail -t -i").
 ; http://php.net/sendmail-path
-;sendmail_path =
+sendmail_path = "env -i /usr/sbin/sendmail -t -i"
 
 ; Force the addition of the specified parameters to be passed as extra parameters
 ; to the sendmail binary. These parameters will always replace the value of
@@ -178,3 +180,6 @@ xdebug.remote_log="/Users/interactivesupply/src/tmp/log/xdebug.log"
 
 
 
+
+
+zend_extension="xdebug.so"

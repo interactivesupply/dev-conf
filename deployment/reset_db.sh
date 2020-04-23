@@ -7,7 +7,7 @@ PORT="$5"
 
 if [ -z "$PORT" ]
 then
-	 PORT="22"
+	 PORT=22
 fi
 
 scp -P $PORT -r -o StrictHostKeyChecking=no $SSH_HOST:$REMOTE_DB_FILE_URI ~/src/tmp/$DB_NAME.sql

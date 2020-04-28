@@ -8,7 +8,7 @@ STATE="$1"
 fi
 local_ip=""
 
-for i in {0..4}
+for i in {0..6}
 do
  	if [ -z "$local_ip" ]
  	then

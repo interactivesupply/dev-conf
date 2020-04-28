@@ -3,7 +3,7 @@ DB_NAME="$1"
 DB_HOST="$2"
 SSH_HOST="$3"   
 REMOTE_DB_FILE_URI="$4"
-PORT="$5"
+PORT=$5
 
 if [ -z "$PORT" ]
 then

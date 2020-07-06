@@ -17,15 +17,9 @@ fi
 if [ -z "$VERSION" ]
 then
 	VERSION="7.4"
-	# ini_info=`php -i | grep "Loaded Configuration File"`
-	# match="Loaded Configuration File => "
-	# replace=""
-	# php_ini=${ini_info/$match/$replace}
 fi
 
 php_ini="/Users/interactivesupply/src/dev-conf/php/php_$VERSION.ini"
-
-
 #do this regardless
 sed -i'' -e "s/zend_extension=\"xdebug.so\"//g" $php_ini
 
@@ -37,11 +31,6 @@ else
 	echo "started"
 fi
 
-if [ -z "$VERSION" ]
-then
-	 brew services restart php
-else
-	 brew services restart php@$VERSION
-fi
+sudo brew services restart php@$VERSION
 
 echo "PHP $VERSION: Debugging has been changed"

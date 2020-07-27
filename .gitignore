@@ -31,3 +31,4 @@ reset_central_db.sh
 *-e
 .DS_Store
 **/.DS_Store
+php/php_7.*.ini*

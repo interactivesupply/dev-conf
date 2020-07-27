@@ -30,4 +30,4 @@ reset_local_db.sh
 reset_central_db.sh
 *-e
 .DS_Store
-.DS_Store
+**/.DS_Store

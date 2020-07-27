@@ -1,7 +1,7 @@
 #!/bin/bash
 
 split_on_commas() {
-  localifS=,
+  local IFS=,
   local WORD_LIST=($1)
   for word in "${WORD_LIST[@]}"; do
     echo "$word"

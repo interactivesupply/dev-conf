@@ -1,12 +1,19 @@
 *.log
 **/.sass-cache/
+/node_modules/
+*.sh
+.vscode/
+
 .DS_Store
 .tweetcache
+/wp-content/advanced-cache.php
 /wp-content/aiowps_backups/
+/wp-content/plugins/all-in-one-wp-security-and-firewall/backups/
+/wp-content/plugins/all-in-one-wp-security-and-firewall/logs/
 /wp-content/upgrade/
 /wp-content/uploads/
-/wp-content/mu-plugins/
-/wp-config.php
+/wp-content/mysql.sql
+wp-config.php
 /license.txt
 /readme.html
 /sitemap.xml
@@ -15,20 +22,20 @@
 /*.sln
 /*.phpproj*
 #/.src
-/node_modules/
+#compilerconfig.json
+#compilerconfig.json.defaults
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+/.vs
 
 /vendor/
+/wp-content/themes/sage/vendor
+/wp-content/uploads - Copy
 /.htaccess
-/wp-content/mysql.sql
+/wp-content/cache
 /wp-content/object-cache.php
-/sql_log.txt
-/*.vs
-/wp-content/themes/northpoint/node_modules
+/wp-content/mu-plugins
 /_wpeprivate
-*.mp4
-reset_local_db.sh
-reset_central_db.sh
-*-e
-.DS_Store
-**/.DS_Store
-php/php_7.*.ini*

@@ -39,3 +39,6 @@ wp-config.php
 /wp-content/object-cache.php
 /wp-content/mu-plugins
 /_wpeprivate
+/node_modules/
+*.sh
+.vscode/

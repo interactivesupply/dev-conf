@@ -28,7 +28,8 @@ fclose($wrapper);
 header('Access-Control-Allow-Origin: *');
 // header('Access-Control-Allow-Origin: ' . $_GET["url"]);
 header('Content-type: application/json');
-$return = array("ip" => $ips[0]);
+$ip_value = is_array($ips) ? $ips[0] : '';
+$return = array("ip" => $ip_value);
 echo json_encode($return, true);
 exit(); 
 ?>

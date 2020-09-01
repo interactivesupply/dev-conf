@@ -29,7 +29,7 @@
 //   //chrome.tabs.insertCSS(integer tabId, object details, function callback)
 $( document ).ready(function() {
   $.ajax({
-    url: "http://test.localhost/ping.php?url=" + location.host,
+    url: "https://test.localhost/ping.php?url=" + location.host,
     crossDomain: true,
     dataType: 'json',
     contentType: "application/json;"

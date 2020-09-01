@@ -24,7 +24,7 @@ IFS='
 for x in `networksetup -listallnetworkservices`; 
 do 
 echo $x
-	if [ $x == "Wi-Fi" ] ||  [ $x == "Broadcom NetXtreme Gigabit Ethernet Controller" ] ||  [ $x == "Ethernet"  ] ||  [ $x == "ISC VPN"  ] ||  [ $x == "USB 10/100/1000 LAN"  ]
+	if [ $x == "Wi-Fi" ] ||  [ $x == "Broadcom NetXtreme Gigabit Ethernet Controller" ] ||  [ $x == "Ethernet"  ] ||  [ $x == "ISC VPN"  ] ||  [ $x == "USB 10/100/1000 LAN"  ] ||  [ $x == "USB C Ethernet"  ]
 	then
 	  	#nic_ip=$(networksetup -getinfo "$x" | awk 'NR ==2' | awk '{print $3'})
     	#echo "nic_ip : $nic_ip"

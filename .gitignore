@@ -1,7 +1,6 @@
 *.log
 **/.sass-cache/
 /node_modules/
-*.sh
 .vscode/
 
 .DS_Store

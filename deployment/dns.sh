@@ -8,13 +8,15 @@ STATE="$1"
 fi
 local_ip=""
 
-for i in {0..6}
-do
- 	if [ -z "$local_ip" ]
- 	then
-		local_ip=`ipconfig getifaddr en$i` #or en1, maybe
-	fi
-done
+# for i in {0..6}
+# echo $x
+# do
+#  	if [ -z "$local_ip" ]
+#  	then
+# 		local_ip=`ipconfig getifaddr en$i` #or en1, maybe
+# 	fi
+# done
+local_ip=`ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}'`
 
 #save IP to log for find and replace purposes elsewhere
 
@@ -24,7 +26,7 @@ IFS='
 for x in `networksetup -listallnetworkservices`; 
 do 
 echo $x
-	if [ $x == "Wi-Fi" ] ||  [ $x == "Broadcom NetXtreme Gigabit Ethernet Controller" ] ||  [ $x == "Ethernet"  ] ||  [ $x == "ISC VPN"  ] ||  [ $x == "USB 10/100/1000 LAN"  ] ||  [ $x == "USB C Ethernet"  ]
+	if [ $x == "USB C Ethernet"  ] || [ $x == "Wi-Fi" ] ||    [ $x == "Broadcom NetXtreme Gigabit Ethernet Controller" ] ||  [ $x == "Ethernet"  ] ||  [ $x == "ISC VPN"  ] ||  [ $x == "USB 10/100/1000 LAN"  ] 
 	then
 	  	#nic_ip=$(networksetup -getinfo "$x" | awk 'NR ==2' | awk '{print $3'})
     	#echo "nic_ip : $nic_ip"

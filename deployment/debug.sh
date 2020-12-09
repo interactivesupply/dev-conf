@@ -39,9 +39,9 @@ fi
 
 if [ -z "$VERSION" ]
 then
-	 sudo brew services restart php
+	  brew services restart php
 else
-	 sudo brew services restart php@$VERSION
+	  brew services restart php@$VERSION
 fi
 
 echo "PHP $VERSION: Debugging has been changed"

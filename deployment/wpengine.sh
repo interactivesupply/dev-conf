@@ -65,6 +65,9 @@ else
  	# cp $HOME/src/dev-conf/deployment/default_files/gulpfile.js gulpfile.js
  	# cp $HOME/src/dev-conf/deployment/default_files/package.json package.json
 
+	sudo find . -type f -exec chmod 777 {} +
+	sudo find . -type d -exec chmod 777 {} +
+	
  	git add -A
  	git commit -m "initial commit"
  	git push -u origin master
@@ -161,6 +164,8 @@ then
 			rm $new_nginx_block-e
 	   	fi
 	done
+
+	
 
  	git add -A
  	git commit -m "Adding webserver conf for $SITENAME"

@@ -7,7 +7,9 @@ STATE="$1"
 	read  -p "Enter 'local' or 'remote': " STATE
 fi
 local_ip=""
-
+#fixes string splitting for network services loop
+IFS='
+'
 # for i in {0..6}
 # echo $x
 # do
@@ -16,13 +18,11 @@ local_ip=""
 # 		local_ip=`ipconfig getifaddr en$i` #or en1, maybe
 # 	fi
 # done
-local_ip=`ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}' | sed '0d'`
+local_ip=`ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}'`
 
 #save IP to log for find and replace purposes elsewhere
-
 for x in `networksetup -listallnetworkservices`; 
 do 
-echo $x
 	if [ $x == "USB C Ethernet"  ] || [ $x == "Wi-Fi" ] ||    [ $x == "Broadcom NetXtreme Gigabit Ethernet Controller" ] ||  [ $x == "Ethernet"  ] ||  [ $x == "ISC VPN"  ] ||  [ $x == "USB 10/100/1000 LAN"  ] 
 	then
 	  	#nic_ip=$(networksetup -getinfo "$x" | awk 'NR ==2' | awk '{print $3'})
@@ -30,9 +30,9 @@ echo $x
 
 		if [ $STATE == "remote" ]
 		then
-			networksetup -setdnsservers $x 1.1.1.1 #empty #1.1.1.1 192.168.0.1
+			networksetup -setdnsservers "$x" 1.1.1.1 #empty #1.1.1.1 192.168.0.1
 		else
-			networksetup -setdnsservers $x $local_ip
+			networksetup -setdnsservers "$x" $local_ip
 
 		fi
 	fi

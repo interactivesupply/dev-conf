@@ -16,13 +16,10 @@ local_ip=""
 # 		local_ip=`ipconfig getifaddr en$i` #or en1, maybe
 # 	fi
 # done
-local_ip=`ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}'`
+local_ip=`ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}' | sed '1d'`
 
 #save IP to log for find and replace purposes elsewhere
 
-
-IFS='
-'
 for x in `networksetup -listallnetworkservices`; 
 do 
 echo $x

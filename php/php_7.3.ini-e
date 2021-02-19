@@ -1,5 +1,6 @@
 
 [PHP]
+curl.cainfo = "/Volumes/Macintosh HD/Users/interactivesupply/src/dev-conf/php/cacert.pem"
 
 ;;;;;;;;;;;;;;;;;;;
 ; Resource Limits ;
@@ -204,3 +205,9 @@ xdebug.profiler_output_name = "cachegrind.out.%H.%R"
 
 
 
+
+
+
+
+
+zend_extension="xdebug.so"

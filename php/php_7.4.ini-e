@@ -1,6 +1,9 @@
 
 [PHP]
 
+curl.cainfo = "/Volumes/Macintosh HD/Users/interactivesupply/src/dev-conf/php/cacert.pem"
+
+
 ;;;;;;;;;;;;;;;;;;;
 ; Resource Limits ;
 ;;;;;;;;;;;;;;;;;;;
@@ -211,4 +214,5 @@ xdebug.remote_log="/Users/interactivesupply/src/tmp/log/xdebug.log"
 
 
 
-zend_extension="xdebug.so"
+
+

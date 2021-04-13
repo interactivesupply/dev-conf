@@ -216,3 +216,9 @@ xdebug.remote_log="/Users/interactivesupply/src/tmp/log/xdebug.log"
 
 
 
+<<<<<<< HEAD
+
+
+=======
+zend_extension="xdebug.so"
+>>>>>>> a83c6b6b03dcef3f14941cdd266dbb15f9ee68b9

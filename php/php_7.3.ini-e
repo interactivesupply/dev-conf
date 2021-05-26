@@ -214,4 +214,3 @@ xdebug.profiler_output_name = "cachegrind.out.%H.%R"
 
 
 
-zend_extension="xdebug.so"

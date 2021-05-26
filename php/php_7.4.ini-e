@@ -1,6 +1,8 @@
 
 [PHP]
+
 curl.cainfo = "/Volumes/Macintosh HD/Users/interactivesupply/src/dev-conf/php/cacert.pem"
+
 
 ;;;;;;;;;;;;;;;;;;;
 ; Resource Limits ;
@@ -132,6 +134,7 @@ display_startup_errors = Off
 upload_max_filesize = 202M
 post_max_size = 201M
 
+
 ; Maximum number of files that can be uploaded via a single request
 max_file_uploads = 2000
 
@@ -153,11 +156,11 @@ sendmail_from = in@emailalert.me
 
 ; For Win32 only.
 ; http://php.net/sendmail-from
-;sendmail_from = me@example.com
+;sendmail_from = me@example.coma
 
 ; For Unix only.  You may supply arguments as well (default: "sendmail -t -i").
 ; http://php.net/sendmail-path
-;sendmail_path =
+sendmail_path = "env -i /usr/sbin/sendmail -t -i"
 
 ; Force the addition of the specified parameters to be passed as extra parameters
 ; to the sendmail binary. These parameters will always replace the value of
@@ -172,46 +175,7 @@ xdebug.remote_handler=dbgp
 xdebug.remote_host=127.0.0.1
 xdebug.remote_port=9000
 xdebug.remote_log="/Users/interactivesupply/src/tmp/log/xdebug.log"
-#
-
-xdebug.profiler_output_dir = "/Users/interactivesupply/src/tmp/log/xdebug_profiler"
-xdebug.profiler_output_name = "cachegrind.out.%H.%R"
-#xdebug.profiler_enable = 0
-#xdebug.profiler_enable_trigger = 1
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-zend_extension="xdebug.so"
